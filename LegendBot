@@ -1,0 +1,48 @@
+
+
+_get_repolink () {
+    local regex
+    regex='(https?)://github.com/.+/.+'
+    if [[ $BGT_REPO == "BgtXUserbot" ]]
+    then
+        echo "aHR0cHM6Ly9naXRodWIuY29tL0xFR0VORFhPUy9MRUdFTkRVU0VSQk9UL2FyY2hpdmUvbWFzdGVyLnppcA==" | base64 -d
+    elif [[ $BGT_REPO == "BgtXUserbot" ]]
+    then
+        echo "aHR0cHM6Ly9naXRodWIuY29tL0xFR0VORFhPUy9MRUdFTkRVU0VSQk9UL2FyY2hpdmUvbWFzdGVyLnppcA==" | base64 -d
+    elif [[ $BGT_REPO =~ $regex ]]
+    then
+        if [[ $BGT_REPO_BRANCH ]]
+        then
+            echo "${BGT_REPO}/archive/${BGT_REPO_BRANCH}.zip"
+        else
+            echo "${BGT_REPO}/archive/master.zip"
+        fi
+    else
+        echo "aHR0cHM6Ly9naXRodWIuY29tL0xFR0VORFhPUy9MRUdFTkRVU0VSQk9UL2FyY2hpdmUvbWFzdGVyLnppcA==" | base64 -d
+    fi
+}
+
+
+_setting_bot () {
+    local zippath
+    zippath="master.zip"
+    echo "  Downloading BgtXUserbot  Source Code..."
+    wget -q $(_get_repolink) -O "$zippath"
+    echo "  Unpacking Data ..."
+    BGTPATH=$(zipinfo -1 "$zippath" | grep -v "/.");
+    unzip -qq "$zippath"
+    echo "Done"
+    echo "  BgtXUserbot Cleaning.."
+    rm -rf "$zippath"
+    sleep 5
+    cd $BGTPATH
+    echo "    🐯Starting ƁƓƬҲƲƧЄƦƁƠƬ🐯     "
+    echo "
+    🇮🇳🥀🇮🇳🥀🇮🇳🥀🇮🇳🥀🇮🇳🥀🇮🇳🥀🇮🇳🥀
+    "
+
+    python3 ../setup/updater.py ../requirements.txt requirements.txt
+    python3 -m userbot
+}
+
+_setting_bot
